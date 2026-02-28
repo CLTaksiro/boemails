@@ -72,7 +72,6 @@ a:hover {
 
 /* theme toggle button */
 .theme-toggle {
-  position: fixed;
   top: var(--space-sm);
   right: var(--space-sm);
   background: var(--color-background);

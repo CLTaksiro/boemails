@@ -953,3 +953,39 @@ const picker = new EmojiMart.Picker({
 
 document.querySelector(".chat-form").appendChild(picker);
 
+// theme toggle logic
+const themeToggleBtn = document.getElementById('theme-toggle');
+if (themeToggleBtn) {
+  const applyTheme = (dark) => {
+    document.body.classList.toggle('dark-theme', dark);
+    themeToggleBtn.innerHTML = dark ? '<i class="bi bi-brightness-low"></i>' : '<i class="bi bi-moon"></i>';
+  };
+  themeToggleBtn.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-theme');
+    themeToggleBtn.innerHTML = isDark ? '<i class="bi bi-brightness-low"></i>' : '<i class="bi bi-moon"></i>';
+    localStorage.setItem('darkTheme', isDark);
+  });
+  const saved = localStorage.getItem('darkTheme') === 'true';
+  applyTheme(saved);
+}
+
+// automatically mark sections for scroll animation
+document.querySelectorAll('.p-3.mb-5, .border-start').forEach(el => el.classList.add('scroll-fade'));
+
+// scroll animation observer
+const scrollElements = document.querySelectorAll('.scroll-fade');
+if (scrollElements.length) {
+  const observerOptions = {
+    threshold: 0.1
+  };
+  const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        scrollObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  scrollElements.forEach(el => scrollObserver.observe(el));
+}
+

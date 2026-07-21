@@ -1,267 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FP Gaming Cyber Cafe Lockscreen</title>
-    <style>
-        :root {
-            --neon-cyan: #00f3ff;
-            --neon-magenta: #ff0055;
-            --neon-yellow: #ffea00;
-            --dark-bg: #0a0a12;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            user-select: none;
-        }
-
-        body {
-      background-image: linear-gradient(rgba(10, 10, 18, 0.75), rgba(10, 10, 18, 0.75)), url('image_1280163d.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #fff;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 40px;
-    overflow: hidden;
-    position: relative;
-        }
-        #matrixCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        #wrapper {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Animated Futuristic Border */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border: 4px solid transparent;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta), var(--neon-cyan)) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            animation: borderGlow 4s linear infinite;
-            pointer-events: none;
-            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.2);
-        }
-
-        @keyframes borderGlow {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        /* Top Centered Animated Logo */
-        .logo-container {
-            text-align: center;
-            margin-top: 20px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .logo-main {
-            height: 200px;
-            width: auto;
-            display: inline-block;
-            font-size: 3.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
-            animation: glitch 1s linear infinite alternate;
-        }
-
-        .logo-sub {
-            font-size: 1.2rem;
-            letter-spacing: 8px;
-            color: var(--neon-magenta);
-            text-shadow: 0 0 5px var(--neon-magenta);
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-
-        /* Main Content Grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            width: 100%;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .panel {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            padding: 30px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .panel-title {
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Left Side: Warnings */
-        .warning-panel .panel-title { color: var(--neon-magenta); }
-        .warning-list { list-style: none; }
-        .warning-list li {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            line-height: 1.4;
-            position: relative;
-            padding-left: 25px;
-        }
-        .warning-list li::before {
-            content: '⚠️';
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-        .ban-alert {
-            color: #ff3333;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* Right Side: Offers & Info */
-        .info-panel .panel-title { color: var(--neon-cyan); }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .info-card {
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .info-card h4 {
-            font-size: 0.9rem;
-            color: #aaa;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .info-card p {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fff;
-        }
-        .promo-card {
-            grid-column: span 2;
-            background: rgba(255, 234, 0, 0.1);
-            border: 1px solid var(--neon-yellow);
-        }
-        .promo-card p { color: var(--neon-yellow); }
-
-        /* Footer Business Hours */
-        .footer-hours {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            color: #aaa;
-            text-transform: uppercase;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 20px;
-            width: 100%;
-            text-align: center;
-        }
-        .time-highlight {
-            color: var(--neon-cyan);
-            font-weight: bold;
-        }
-
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 2px 2px var(--neon-magenta), -2px -2px var(--neon-cyan); }
-            100% { text-shadow: -2px 2px var(--neon-magenta), 2px -2px var(--neon-cyan); }
-        }
-    </style>
+<meta charset="utf-8">
+<title>FP Gaming Cyber Cafe — Lock Screen</title>
+<style>
+html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background:#07021a; color:#e6f7ff; font-family:Arial, Helvetica, sans-serif; }
+body { background-color:#07021a; }
+#page { position:absolute; top:0; left:0; width:100%; height:100%; }
+#main { position:absolute; top:6%; left:4%; right:4%; bottom:10%; background:#090918; border:1px solid #1b1b34; }
+#contentTable { width:100%; height:100%; border-collapse:collapse; }
+.panel { padding:18px; }
+.glass { background:#0d1229; border:1px solid #243052; }
+.header-title { font-size:28px; font-weight:bold; color:#dff5ff; }
+.header-label { font-size:11px; letter-spacing:1px; color:#8ea7bf; padding-bottom:10px; }
+.header-copy { font-size:13px; color:#c6d8ef; line-height:18px; padding-top:6px; }
+.row-table { width:100%; border-collapse:collapse; }
+.stat-card { background:#10152c; border:1px solid #2e3a58; padding:14px; }
+.stat-label { font-size:11px; color:#9fbfdc; letter-spacing:1px; padding-bottom:6px; }
+.stat-value { font-size:26px; font-weight:bold; color:#e8fbff; }
+.status { display:inline-block; padding:5px 10px; font-size:11px; font-weight:bold; color:#b8dfff; border:1px solid #2a3f66; }
+.status-online { background:#052d4a; color:#86f6ff; border-color:#0a7291; }
+.status-node { background:#3b113c; color:#ff9be0; border-color:#6b3b74; }
+.service-row { width:100%; border-collapse:collapse; margin-bottom:6px; }
+.service-cell { padding:10px; vertical-align:top; }
+.service-box { background:#10162f; border:1px solid #2b3b5d; padding:10px; }
+.service-title { font-size:13px; font-weight:bold; color:#e8f7ff; }
+.service-copy { font-size:12px; color:#b9d0f0; padding-top:4px; }
+.status-small { display:inline-block; padding:4px 8px; font-size:11px; font-weight:bold; color:#d2e9ff; border:1px solid #2b3a57; margin-top:8px; }
+.locked-box { background:#170b13; border:1px solid #53132c; color:#ff8ab1; }
+.ticker { position:absolute; left:0; right:0; bottom:0; height:34px; background:#06101e; border-top:1px solid #14233d; color:#a9c6dd; font-size:12px; padding-left:14px; line-height:34px; white-space:nowrap; }
+#loader { position:absolute; top:0; left:0; width:100%; height:100%; background:#02040f; z-index:10; }
+#loaderCard { width:92%; max-width:700px; margin:50px auto; background:#0b1225; border:1px solid #222e45; padding:18px; text-align:center; }
+.loader-title { font-size:18px; font-weight:bold; margin-top:16px; margin-bottom:8px; }
+.loader-copy { color:#b7d3f4; font-size:13px; margin-bottom:14px; }
+.scan-bar { width:98%; height:8px; background:#0f1632; border:1px solid #1c2853; margin:0 auto; }
+.scan-fill { width:45%; height:100%; background:#0ee5ff; }
+.label-small { font-size:11px; color:#9fbfdc; letter-spacing:1px; }
+.mono { font-family:"Courier New", Courier, monospace; }
+</style>
 </head>
 <body>
-<canvas id="matrixCanvas"></canvas>
-<div id="wrapper">
-    <!-- Top Centered Animated Logo -->
-    <div class="logo-container">
-        <img src="fpgaminglogo.png" alt="FP Gaming Logo" class="logo-main" />
-    </div>
-
-    <!-- Main Content -->
-    <div class="content-grid">
-        
-        <!-- Left Side: Strict Rules -->
-        <div class="panel warning-panel">
-            <div class="panel-title">🛡️ Cyber Cafe Rules & Warnings</div>
-            <ul class="warning-list">
-                <li><span class="ban-alert">PAY FIRST BEFORE PLAY.</span> Please settle payments at the counter.</li>
-                <li><span class="ban-alert">PORN IS STRICTLY PROHIBITED.</span> Caught in the act will result in an immediate permanent ban.</li>
-                <li>No sharp objects or materials allowed inside the premises.</li>
-                <li>Strictly NO SMOKING inside the air-conditioned area.</li>
-                <li>This establishment is 24/7 CCTV Protected for your safety.</li>
-            </ul>
-        </div>
-
-        <!-- Right Side: Rates & Services -->
-        <div class="panel info-panel">
-            <div class="panel-title">⚡ Services & Rates</div>
-            <div class="info-grid">
-                <div class="info-card promo-card">
-                    <h4>🔥 Special Hot Promo</h4>
-                    <p>3 Hours for only ₱40</p>
-                </div>
-                <div class="info-card">
-                    <h4>💻 PC Formatting</h4>
-                    <p>₱15 / Hour</p>
-                </div>
-                <div class="info-card">
-                    <h4>🖨️ Document Services</h4>
-                    <p>Printing Available</p>
-                </div>
-                <div class="info-card" style="grid-column: span 2;">
-                    <h4>📲 Express Cash-in/out</h4>
-                    <p>GCash Services Accepted</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Footer Business Hours -->
-    <div class="footer-hours">
-        Business Hours: <span class="time-highlight">8:00 AM – 9:00 PM</span> Daily
-    </div>
-
+<div id="page">
+  <div id="main">
+    <table id="contentTable" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="panel" valign="top" width="65%">
+          <div class="glass" style="padding:16px;">
+            <div class="header-label">STATION LOCK</div>
+            <div class="header-title">FP Gaming Cyber Cafe</div>
+            <div class="header-copy">Welcome back. This workstation is secured. Present your token to unlock or wait for the session to expire.</div>
+          </div>
+          <table class="row-table" border="0" cellpadding="8" cellspacing="0" style="padding-top:16px;">
+            <tr>
+              <td class="stat-card">
+                <div class="stat-label">PC NUMBER</div>
+                <div class="stat-value mono">Unknown</div>
+              </td>
+              <td class="stat-card">
+                <div class="stat-label">SESSION TIME REMAINING</div>
+                <div class="stat-value mono" id="countdown">00:00:00</div>
+              </td>
+              <td class="stat-card locked-box">
+                <div class="stat-label">SYSTEM</div>
+                <div class="stat-value" style="font-size:18px;">LOCKED</div>
+                <div style="font-size:11px; color:#ffb5d5; padding-top:6px;">Awaiting authentication token</div>
+              </td>
+            </tr>
+          </table>
+          <div class="glass" style="padding:14px; margin-top:16px;">
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell" width="18%" style="padding-right:10px;">
+                  <div class="service-box" style="text-align:center; font-size:18px; color:#6ff;">P</div>
+                </td>
+                <td class="service-cell">
+                  <div class="service-title">Document Printing & Scanning</div>
+                  <div class="service-copy">High-quality print and duplex scanning</div>
+                </td>
+                <td class="service-cell" width="140" style="text-align:right;">
+                  <span class="status status-online">Ready</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell" width="18%" style="padding-right:10px;">
+                  <div class="service-box" style="text-align:center; font-size:18px; color:#f7a;">$</div>
+                </td>
+                <td class="service-cell">
+                  <div class="service-title">GCash Cash-In / Cash-Out</div>
+                  <div class="service-copy">Fast, secure, receipt-supported transactions</div>
+                </td>
+                <td class="service-cell" width="140" style="text-align:right;">
+                  <span class="status status-node">Node</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell" width="18%" style="padding-right:10px;">
+                  <div class="service-box" style="text-align:center; font-size:18px; color:#9df;">F</div>
+                </td>
+                <td class="service-cell">
+                  <div class="service-title">PC Formatting & OS Installation</div>
+                  <div class="service-copy">Technical maintenance protocols and fresh installs</div>
+                </td>
+                <td class="service-cell" width="140" style="text-align:right;">
+                  <span class="status status-online">Schedule</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell" width="18%" style="padding-right:10px;">
+                  <div class="service-box" style="text-align:center; font-size:18px; color:#7ff;">G</div>
+                </td>
+                <td class="service-cell">
+                  <div class="service-title">Game Installing & Patching</div>
+                  <div class="service-copy">Automated deployment, patching queue</div>
+                </td>
+                <td class="service-cell" width="140" style="text-align:right;">
+                  <div style="font-size:12px; color:#a8dffb; padding-bottom:6px;">Queue progress</div>
+                  <div class="scan-bar"><div class="scan-fill" id="pbarFill"></div></div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+        <td class="panel" valign="top" width="35%">
+          <div class="glass" style="padding:16px;">
+            <div class="header-label">SIDE SERVICES HUB</div>
+            <div class="header-title" style="font-size:18px;">Business & Maintenance</div>
+            <div class="header-copy" style="padding-top:4px;">Station: <span class="mono">PC-09</span></div>
+          </div>
+          <div class="glass" style="padding:14px; margin-top:16px;">
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-title">Express Print</div>
+                  <div class="service-copy">Black & white: ₱5/page · Color: ₱12/page</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-small status-online">Online</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-title">GCash Terminal</div>
+                  <div class="service-copy">Cash-in/cash-out with receipts</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-small status-node">Node</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-title">Tech Workbench</div>
+                  <div class="service-copy">Formatting / OS installs by appointment</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-small status-online">Avail</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-title">Patching Queue</div>
+                  <div class="service-copy">Background updates and game installs</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <div class="scan-bar"><div class="scan-fill" id="pbarRight" style="width:48%;"></div></div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="ticker">
+    Free Wi-Fi · Printing ₱5 B/W · Color ₱12 · GCash Cash-In Available · Evening Promo: 2hrs + 30mins free · Ask counter for bundle deals · PC Formatting by appointment — Welcome to FP Gaming Cyber Cafe
+  </div>
+</div>
+<div id="loader">
+  <div id="loaderCard">
+    <div class="loader-title">Neural Syncing — Biometric Scan</div>
+    <div class="loader-copy">Authenticating secure session and initializing workstation controls.</div>
+    <div class="scan-bar" style="margin-top:14px;"><div class="scan-fill" style="width:40%;"></div></div>
+    <table border="0" cellpadding="4" cellspacing="0" style="width:100%; margin-top:14px; color:#cfefff;">
+      <tr>
+        <td align="center">Handshake: <strong style="color:#9ff;">OK</strong></td>
+        <td align="center">Modules: <strong style="color:#f9f;">3/3</strong></td>
+        <td align="center">Session: <strong style="color:#9ff;">READY</strong></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<script>
+(function () {
+  var loader = document.getElementById('loader');
+  var countdown = document.getElementById('countdown');
+  var pbarFill = document.getElementById('pbarFill');
+  var remaining = 2 * 3600 + 45 * 60 + 12;
+  function pad(value) { return (value < 10 ? '0' : '') + value; }
+  function updateCountdown() {
+    if (remaining < 0) { return; }
+    var hours = Math.floor(remaining / 3600);
+    var minutes = Math.floor((remaining % 3600) / 60);
+    var seconds = remaining % 60;
+    if (countdown) {
+      countdown.innerText = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+    }
+    remaining = remaining - 1;
+  }
+  function updateProgress() {
+    if (pbarFill) {
+      var value = 36 + Math.floor(Math.random() * 6);
+      if (value > 98) { value = 98; }
+      pbarFill.style.width = value + '%';
+    }
+  }
+  setTimeout(function () {
+    if (loader && loader.style) {
+      loader.style.display = 'none';
+    }
+  }, 3000);
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  setInterval(updateProgress, 2200);
+})();
+</script>
 </body>
 </html>

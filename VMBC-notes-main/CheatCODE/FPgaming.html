@@ -7,28 +7,38 @@
 html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background:#07021a; color:#e6f7ff; font-family:Arial, Helvetica, sans-serif; }
 body { background-color:#07021a; }
 #page { position:absolute; top:0; left:0; width:100%; height:100%; }
-#main { position:absolute; top:6%; left:4%; right:4%; bottom:10%; background:#090918; border:1px solid #1b1b34; }
+#main { position:absolute; top:2%; left:2%; right:2%; bottom:4%; background:#090918; border:1px solid #1b1b34; }
 #contentTable { width:100%; height:100%; border-collapse:collapse; }
 .panel { padding:18px; }
 .glass { background:#0d1229; border:1px solid #243052; }
+.warning-glass { background:#1b0505; border:1px solid #3f3b7c; }
+.glass-warning-header { background:#990029; border:1px solid #b1012d; }
 .header-title { font-size:28px; font-weight:bold; color:#dff5ff; }
 .header-label { font-size:11px; letter-spacing:1px; color:#8ea7bf; padding-bottom:10px; }
+.header-warning-label { font-size:11px; letter-spacing:1px; color:#ff9a9a; padding-bottom:10px; }
+.header-warning-title { font-size:28px; font-weight:bold; color:#ff9a9a; }
 .header-copy { font-size:13px; color:#c6d8ef; line-height:18px; padding-top:6px; }
 .row-table { width:100%; border-collapse:collapse; }
 .stat-card { background:#10152c; border:1px solid #2e3a58; padding:14px; }
 .stat-label { font-size:11px; color:#9fbfdc; letter-spacing:1px; padding-bottom:6px; }
 .stat-value { font-size:26px; font-weight:bold; color:#e8fbff; }
-.status { display:inline-block; padding:5px 10px; font-size:11px; font-weight:bold; color:#b8dfff; border:1px solid #2a3f66; }
+.status { display:inline-block; padding:5px 10px; font-size:15px; font-weight:bold; color:#b8dfff; border:1px solid #2a3f66; }
 .status-online { background:#052d4a; color:#86f6ff; border-color:#0a7291; }
 .status-node { background:#3b113c; color:#ff9be0; border-color:#6b3b74; }
+.status-warning-node { background:#3b113c; color:#ff9be0; border-color:#6b3b74; }
+.warning { background: #ffba3b;}
+.alert { background: #ff3b3b;}
 .service-row { width:100%; border-collapse:collapse; margin-bottom:6px; }
 .service-cell { padding:10px; vertical-align:top; }
 .service-box { background:#10162f; border:1px solid #2b3b5d; padding:10px; }
-.service-title { font-size:13px; font-weight:bold; color:#e8f7ff; }
-.service-copy { font-size:12px; color:#b9d0f0; padding-top:4px; }
-.status-small { display:inline-block; padding:4px 8px; font-size:11px; font-weight:bold; color:#d2e9ff; border:1px solid #2b3a57; margin-top:8px; }
+.service-title { font-size:20px; font-weight:bold; color:#e8f7ff; }
+.service-warning-title { font-size:24px; font-weight:bold; color:#ca0054; }
+.service-copy { font-size:17px; color:#b9d0f0; padding-top:4px; }
+.service-warning-copy { font-size:15px; color:#ff8ab1; padding-top:4px; }
+.status-small { display:inline-block; padding:4px 8px; font-size:15px; font-weight:bold; color:#d2e9ff; border:1px solid #2b3a57; margin-top:8px; }
+.status-warning-small { display:inline-block; padding:4px 8px; font-size:15px; font-weight:bold; color:#ff8ab1; border:1px solid #53132c; margin-top:8px; }
 .locked-box { background:#170b13; border:1px solid #53132c; color:#ff8ab1; }
-.ticker { position:absolute; left:0; right:0; bottom:0; height:34px; background:#06101e; border-top:1px solid #14233d; color:#a9c6dd; font-size:12px; padding-left:14px; line-height:34px; white-space:nowrap; }
+.ticker { position:absolute; left:0; right:0; bottom:0; height:34px; background:#06101e; border-top:1px solid #14233d; color:#a9c6dd; font-size:17px; padding-left:14px; line-height:34px; white-space:nowrap; }
 #loader { position:absolute; top:0; left:0; width:100%; height:100%; background:#02040f; z-index:10; }
 #loaderCard { width:92%; max-width:700px; margin:50px auto; background:#0b1225; border:1px solid #222e45; padding:18px; text-align:center; }
 .loader-title { font-size:18px; font-weight:bold; margin-top:16px; margin-bottom:8px; }
@@ -120,7 +130,7 @@ body { background-color:#07021a; }
                   <div class="service-copy">Automated deployment, patching queue</div>
                 </td>
                 <td class="service-cell" width="140" style="text-align:right;">
-                  <div style="font-size:12px; color:#a8dffb; padding-bottom:6px;">Queue progress</div>
+                  <div style="font-size:15px; color:#a8dffb; padding-bottom:6px;">Queue progress</div>
                   <div class="scan-bar"><div class="scan-fill" id="pbarFill"></div></div>
                 </td>
               </tr>
@@ -130,8 +140,8 @@ body { background-color:#07021a; }
         <td class="panel" valign="top" width="35%">
           <div class="glass" style="padding:16px;">
             <div class="header-label">SIDE SERVICES HUB</div>
-            <div class="header-title" style="font-size:18px;">Business & Maintenance</div>
-            <div class="header-copy" style="padding-top:4px;">Station: <span class="mono">PC-09</span></div>
+            <div class="header-title" style="font-size:25px;">Business & Maintenance</div>
+            <div class="header-copy" style="padding-top:4px;">Station: <span class="mono">Kambal Softdrinks Store</span></div>
           </div>
           <div class="glass" style="padding:14px; margin-top:16px;">
             <table class="service-row" border="0" cellpadding="0" cellspacing="0">
@@ -167,14 +177,75 @@ body { background-color:#07021a; }
                 </td>
               </tr>
             </table>
+          </div>
+          <div class="warning-glass" style="padding:14px; margin-top:16px;">
+            <div class="glass-warning-header" style="padding:16px;">
+            <div class="header-warning-label">WARNING</div>
+            <div class="header-warning-title" style="font-size:30px;">Rules & Regulations</div>
+          </div>
             <table class="service-row" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td class="service-cell">
-                  <div class="service-title">Patching Queue</div>
-                  <div class="service-copy">Background updates and game installs</div>
+                  <div class="service-warning-title">Porn Browsing</div>
+                  <div class="service-warning-copy">Access to adult content is strictly prohibited.</div>
                 </td>
                 <td class="service-cell" width="90" style="text-align:right;">
-                  <div class="scan-bar"><div class="scan-fill" id="pbarRight" style="width:48%;"></div></div>
+                  <span class="status-warning-small status-warning-node">Permanently_BAN</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+               <tr>
+                <td class="service-cell">
+                  <div class="service-warning-title">Sharp Objects</div>
+                  <div class="service-warning-copy">Knives and other sharp objects are strictly prohibited.</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-warning-small status-warning-node">Permanently_BAN</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-warning-title">Provoking</div>
+                  <div class="service-warning-copy">Provoking or inciting violence is strictly prohibited.</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-warning-small status-warning-node warning" style="color:#07021a">Warning</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-warning-title">Pay First</div>
+                  <div class="service-warning-copy">All services must be paid for before use.</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-warning-small status-warning-node alert" style="color:#07021a">Alert</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-warning-title">No Smoking</div>
+                  <div class="service-warning-copy">Smoking is strictly prohibited in all areas.</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-warning-small status-warning-node alert" style="color:#07021a">Alert</span>
+                </td>
+              </tr>
+            </table>
+            <table class="service-row" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="service-cell">
+                  <div class="service-warning-title" style="color: greenyellow;">Cleaning</div>
+                  <div class="service-warning-copy" style="color: green;">Please keep the area clean and tidy at all times.</div>
+                </td>
+                <td class="service-cell" width="90" style="text-align:right;">
+                  <span class="status-warning-small status-warning-node" style="color:#07021a; background-color: #ffffe7;">Caution</span>
                 </td>
               </tr>
             </table>
@@ -183,8 +254,7 @@ body { background-color:#07021a; }
       </tr>
     </table>
   </div>
-  <div class="ticker">
-    Free Wi-Fi · Printing ₱5 B/W · Color ₱12 · GCash Cash-In Available · Evening Promo: 2hrs + 30mins free · Ask counter for bundle deals · PC Formatting by appointment — Welcome to FP Gaming Cyber Cafe
+  <div class="ticker">Printing ₱5 B/W · Color ₱12 · GCash Cash-In Available · Promo: 3hrs for 40Php · Ask counter for bundle deals · PC Formatting by appointment — Welcome to FP Gaming Cyber Cafe
   </div>
 </div>
 <div id="loader">

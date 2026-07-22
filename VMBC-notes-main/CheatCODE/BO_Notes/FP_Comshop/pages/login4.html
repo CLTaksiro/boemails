@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FP Gaming Cyber Cafe — Station Lock</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07021a;
+      --surface: rgba(13, 18, 41, 0.95);
+      --surface-strong: #090918;
+      --border: #1b1b34;
+      --border-soft: #243052;
+      --text: #e6f7ff;
+      --muted: #9fbfdc;
+      --accent: #3fd8ff;
+      --accent-strong: #8affd8;
+      --warning: #ff8ab1;
+      --danger: #ff5b6b;
+      --success: #74e8ff;
+      --radius: 24px;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top left, rgba(63, 216, 255, 0.14), transparent 26%),
+                  radial-gradient(circle at top right, rgba(118, 70, 255, 0.12), transparent 24%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .screen {
+      width: min(1340px, 100%);
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+      animation: fadeIn 0.7s ease;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 20px;
+      padding: 28px 32px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(2rem, 2.4vw, 3.2rem);
+      line-height: 1.05;
+      color: #e7fbff;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 72ch;
+      line-height: 1.7;
+      color: #c4d8ef;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+      justify-content: end;
+      text-align: right;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(10, 28, 60, 0.8);
+      color: var(--success);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+
+    .hero-panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .hero-panel p {
+      margin: 0;
+      color: #c7d8ef;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+      padding: 24px 32px 30px;
+    }
+
+    .layout {
+      grid-template-columns: 1.8fr 1fr;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+
+    .panel h2,
+    .panel h3,
+    .panel p {
+      margin: 0;
+    }
+
+    .panel h2 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #eaf8ff;
+    }
+
+    .panel p {
+      color: #bacfe4;
+      line-height: 1.75;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(130px, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .status-card {
+      background: #0f162d;
+      border: 1px solid rgba(108, 141, 201, 0.16);
+      border-radius: 18px;
+      padding: 18px 16px;
+    }
+
+    .status-card small {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .status-card strong {
+      display: block;
+      font-size: 1.8rem;
+      color: #f5fbff;
+      font-family: 'Courier New', Courier, monospace;
+      line-height: 1.05;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 10px;
+    }
+
+    .pill-ready { background: rgba(7, 45, 74, 0.9); color: #8af3ff; border-color: #0d7bb8; }
+    .pill-node { background: rgba(59, 17, 60, 0.86); color: #ff9be0; border-color: #7b4e7d; }
+    .pill-alert { background: rgba(255, 111, 111, 0.18); color: #ffb7c2; border-color: #d23a4d; }
+    .pill-success { background: rgba(63, 216, 255, 0.14); color: #9eefff; border-color: #69c4ff; }
+
+    .unlock-form {
+      margin-top: 28px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .unlock-form label {
+      font-size: 0.92rem;
+      color: #d5e5ff;
+    }
+
+    .unlock-form input {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(10, 18, 35, 0.95);
+      color: var(--text);
+      padding: 16px 18px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .unlock-form input:focus {
+      border-color: rgba(63, 216, 255, 0.6);
+      box-shadow: 0 0 0 4px rgba(63, 216, 255, 0.1);
+    }
+
+    .unlock-form button {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #07021a;
+      background: linear-gradient(135deg, #4df6ff, #51d3ff);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .unlock-form button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 30px rgba(74, 233, 255, 0.18);
+    }
+
+    .progress-wrap {
+      margin-top: 16px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .progress-fill {
+      width: 62%;
+      height: 100%;
+      background: linear-gradient(90deg, #71eefa, #5bc0ff);
+      transition: width 0.35s ease;
+    }
+
+    .service-list,
+    .warning-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .service-item,
+    .warning-item {
+      background: rgba(10, 18, 35, 0.82);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .service-item strong,
+    .warning-item strong {
+      color: #f5fbff;
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+
+    .service-item span,
+    .warning-item span {
+      color: #b6c8e5;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .service-item .status-small,
+    .warning-item .status-small {
+      width: fit-content;
+    }
+
+    .status-small {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .small-online { color: #a8e7ff; background: rgba(60, 126, 177, 0.15); }
+    .small-node { color: #ff9be0; background: rgba(77, 24, 73, 0.16); }
+    .small-alert { color: #ffb8b8; background: rgba(153, 15, 34, 0.16); }
+    .small-ok { color: #d4ff7d; background: rgba(122, 148, 35, 0.16); }
+
+    .warning-header {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(217, 0, 88, 0.18), rgba(42, 7, 20, 0.9));
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .warning-header p {
+      margin: 0;
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ff9a9a;
+    }
+
+    .warning-header h3 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: #ffccd8;
+    }
+
+    .ticker {
+      padding: 16px 24px;
+      color: #a9c6dd;
+      font-size: 0.98rem;
+      background: rgba(4, 13, 34, 0.95);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ticker:before {
+      content: '•';
+      margin-right: 10px;
+      color: #4df6ff;
+    }
+
+    @media (max-width: 1080px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-side { justify-content: start; text-align: left; }
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .screen { border-radius: 24px; }
+      .hero, .grid { padding-left: 18px; padding-right: 18px; }
+      .panel { padding: 18px; }
+      .status-grid { grid-template-columns: 1fr; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <article class="screen">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Station Lock</p>
+        <h1>Client PC is secured and waiting for unlock.</h1>
+        <p>Present your token to resume your session. If you don't have one, ask the counter for help and payment options.</p>
+      </div>
+      <div class="hero-side">
+        <span class="badge">Client PC Lock</span>
+        <div class="hero-panel">
+          <p class="eyebrow">Station</p>
+          <p style="margin-top: 8px; font-size: 1.02rem; color:#cbe9ff;">Kambal Softdrinks Store</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid layout">
+      <div>
+        <section class="panel">
+          <div style="display:grid; gap:18px;">
+            <div style="display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; align-items:flex-start;">
+              <div>
+                <p class="eyebrow">Locked Workstation</p>
+                <h2>Awaiting authentication token</h2>
+              </div>
+              <img src="../images/icon2 FP.png" alt="Lock screen" style="width:100%; max-width:180px; border-radius:24px; filter: drop-shadow(0 0 18px rgba(63, 216, 255, 0.24));">
+            </div>
+
+            <div class="status-grid">
+              <div class="status-card">
+                <small>PC Number</small>
+                <strong id="pcNumber">Unknown</strong>
+              </div>
+              <div class="status-card">
+                <small>Session time remaining</small>
+                <strong id="countdown">00:00:00</strong>
+              </div>
+              <div class="status-card">
+                <small>System state</small>
+                <strong style="font-size:1.4rem;">LOCKED</strong>
+                <span class="status-pill pill-alert">Needs token</span>
+              </div>
+            </div>
+
+            <form class="unlock-form" id="unlockForm">
+              <label for="tokenInput">Unlock token</label>
+              <input id="tokenInput" name="token" type="text" placeholder="Scan or enter token" autocomplete="off" aria-label="Unlock token">
+              <button type="submit">Unlock station</button>
+              <p style="color:#9cb8d8; font-size:0.92rem;">Token only works when issued by the counter. If your token is lost, ask the attendant for a replacement.</p>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div style="display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; align-items:center;">
+            <div>
+              <p class="eyebrow">Cafe services</p>
+              <h2>Available while locked</h2>
+            </div>
+            <span class="status-pill pill-success">Ready</span>
+          </div>
+
+          <div class="service-list">
+            <div class="service-item">
+              <strong>Printing & scanning</strong>
+              <span>High-quality printing, duplex scanning, and instant receipts.</span>
+              <span class="status-small small-online">Ready</span>
+            </div>
+            <div class="service-item">
+              <strong>GCash terminal</strong>
+              <span>Fast cash-in / cash-out transaction support with receipts.</span>
+              <span class="status-small small-node">Node</span>
+            </div>
+            <div class="service-item">
+              <strong>PC maintenance</strong>
+              <span>Formatting, OS install, and diagnostics by schedule.</span>
+              <span class="status-small small-success">Schedule</span>
+            </div>
+            <div class="service-item">
+              <strong>Web development</strong>
+              <span>Custom website and digital service support.</span>
+              <div class="progress-wrap">
+                <span class="status-pill pill-success">Queue progress</span>
+                <div class="progress-bar"><div id="pbarFill" class="progress-fill"></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="panel">
+          <p class="eyebrow">Service hub</p>
+          <h2>Business & maintenance</h2>
+          <div class="service-list">
+            <div class="service-item" style="grid-template-columns: 1fr auto; display:grid; align-items:center;">
+              <div>
+                <strong>Express print</strong>
+                <span>Black & white ₱5 / page · Color ₱15 / page</span>
+              </div>
+              <span class="status-small small-online">Online</span>
+            </div>
+            <div class="service-item" style="grid-template-columns: 1fr auto; display:grid; align-items:center;">
+              <div>
+                <strong>GCash terminal</strong>
+                <span>Cash-in/cash-out with printed receipts.</span>
+              </div>
+              <span class="status-small small-node">Node</span>
+            </div>
+            <div class="service-item" style="grid-template-columns: 1fr auto; display:grid; align-items:center;">
+              <div>
+                <strong>Tech workbench</strong>
+                <span>Formatting and OS installs by appointment.</span>
+              </div>
+              <span class="status-small small-online">Avail</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="warning-header">
+            <p>Warning</p>
+            <h3>Rules & regulations</h3>
+          </div>
+
+          <div class="warning-list">
+            <div class="warning-item">
+              <strong>Porn browsing</strong>
+              <span>Access to adult content is strictly prohibited.</span>
+              <span class="status-small small-alert">Ban</span>
+            </div>
+            <div class="warning-item">
+              <strong>Sharp objects</strong>
+              <span>Knives and other sharp items are not allowed.</span>
+              <span class="status-small small-alert">Ban</span>
+            </div>
+            <div class="warning-item">
+              <strong>Provoking</strong>
+              <span>Provoking or inciting violence is strictly prohibited.</span>
+              <span class="status-small small-alert">Warning</span>
+            </div>
+            <div class="warning-item">
+              <strong>Pay first</strong>
+              <span>All services must be paid for before use.</span>
+              <span class="status-small small-alert">Alert</span>
+            </div>
+            <div class="warning-item">
+              <strong>No smoking</strong>
+              <span>Smoking is prohibited in all facility areas.</span>
+              <span class="status-small small-alert">Alert</span>
+            </div>
+            <div class="warning-item">
+              <strong>Keep it clean</strong>
+              <span>Please keep your station and surrounding area tidy at all times.</span>
+              <span class="status-small small-ok">Must</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer class="ticker">
+      Printing ₱5 B/W · Color ₱15 · GCash Cash-In Available · Promo: 3hrs for ₱40 · Ask counter for bundle deals · PC formatting by appointment · Welcome to FP Gaming Cyber Cafe
+    </footer>
+  </article>
+
+  <script>
+    (function () {
+      var countdown = document.getElementById('countdown');
+      var pbarFill = document.getElementById('pbarFill');
+      var pcNumber = document.getElementById('pcNumber');
+      var remaining = 2 * 3600 + 45 * 60 + 12;
+      var stationId = 'PC-07';
+
+      if (pcNumber) {
+        pcNumber.textContent = stationId;
+      }
+
+      function pad(value) {
+        return value.toString().padStart(2, '0');
+      }
+
+      function updateCountdown() {
+        if (remaining < 0) {
+          return;
+        }
+        var hours = Math.floor(remaining / 3600);
+        var minutes = Math.floor((remaining % 3600) / 60);
+        var seconds = remaining % 60;
+        if (countdown) {
+          countdown.textContent = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+        }
+        remaining -= 1;
+      }
+
+      function updateProgress() {
+        if (!pbarFill) return;
+        var value = 70 + Math.floor(Math.random() * 21);
+        if (value > 100) {
+          value = 100;
+        }
+        pbarFill.style.width = value + '%';
+      }
+
+      function handleUnlock(event) {
+        event.preventDefault();
+        var tokenInput = document.getElementById('tokenInput');
+        if (!tokenInput) return;
+        if (tokenInput.value.trim() === '') {
+          tokenInput.focus();
+          return;
+        }
+        alert('Unlock request received. Please wait while the token is validated.');
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+      setInterval(updateProgress, 650);
+
+      var form = document.getElementById('unlockForm');
+      if (form) {
+        form.addEventListener('submit', handleUnlock);
+      }
+    })();
+  </script>
+</body>
+</html>

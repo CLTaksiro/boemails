@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FP Gaming Cyber Cafe — Lock Screen</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #04050f;
+      --surface: rgba(10, 17, 36, 0.88);
+      --surface-strong: rgba(5, 9, 22, 0.96);
+      --border: rgba(81, 216, 255, 0.22);
+      --text: #eaf6ff;
+      --muted: #8fadc9;
+      --accent: #57d1ff;
+      --accent-strong: #8a74ff;
+      --radius: 18px;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: Inter, 'Segoe UI', system-ui, sans-serif; background: radial-gradient(circle at 15% 12%, rgba(81, 216, 255, 0.14), transparent 18%), radial-gradient(circle at 88% 10%, rgba(139, 79, 255, 0.12), transparent 20%), var(--bg); color: var(--text); }
+    body { display: flex; align-items: center; justify-content: center; }
+
+    .frame { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    .backdrop { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7, 12, 30, 0.75), rgba(3, 6, 16, 0.98)); pointer-events: none; }
+    .glow-blob { position: absolute; border-radius: 50%; filter: blur(30px); opacity: 0.85; pointer-events: none; }
+    .glow-blob.one { top: 8%; left: 6%; width: 260px; height: 260px; background: rgba(81, 216, 255, 0.18); }
+    .glow-blob.two { bottom: 10%; right: 8%; width: 320px; height: 320px; background: rgba(145, 82, 255, 0.16); }
+
+    .grid { display: grid; grid-template-columns: 1.3fr 0.95fr; gap: 24px; height: 100%; padding: 28px 32px; }
+    .header { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 24px; border-radius: 20px; background: rgba(10, 18, 36, 0.88); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(18px); box-shadow: var(--shadow); }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark { width: 54px; height: 54px; border-radius: 16px; background: linear-gradient(135deg, rgba(87, 209, 255, 0.95), rgba(128, 85, 255, 0.92)); display: grid; place-items: center; box-shadow: 0 0 0 1px rgba(255,255,255,0.08); }
+    .brand-mark span { color: #fff; font-size: 1.1rem; font-weight: 800; }
+    .brand-text { display: grid; gap: 2px; }
+    .brand-text .name { font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #e8f8ff; }
+    .brand-text .sub { font-size: 0.86rem; color: var(--muted); }
+
+    .header-meta { display: flex; align-items: center; gap: 24px; flex: 1; justify-content: center; color: var(--muted); font-size: 0.95rem; }
+    .header-meta div { display: grid; gap: 6px; text-align: center; }
+    .header-meta strong { color: #f5fbff; font-size: 1.05rem; }
+
+    .header-status { display: flex; align-items: center; gap: 12px; }
+    .status-chip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); font-weight: 700; color: #57d1ff; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #57d1ff; box-shadow: 0 0 14px rgba(87, 209, 255, 0.4); }
+
+    .panel { border-radius: 24px; background: rgba(8, 14, 29, 0.92); border: 1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow); padding: 28px; display: grid; gap: 24px; position: relative; overflow: hidden; }
+    .panel::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(87, 209, 255, 0.08), transparent 28%); pointer-events: none; }
+
+    .hero { display: grid; gap: 24px; }
+    .hero-title { margin: 0; font-size: clamp(2.6rem, 3vw, 3.8rem); line-height: 1.02; color: #eef8ff; }
+    .hero-copy { margin: 0; color: #b7d2ec; font-size: 1rem; line-height: 1.75; max-width: 70ch; }
+    .eyebrow { margin: 0; color: var(--accent); font-size: 0.85rem; letter-spacing: 0.18em; text-transform: uppercase; }
+
+    .status-grid { display: grid; grid-template-columns: repeat(3, minmax(140px, 1fr)); gap: 18px; }
+    .status-card { border-radius: 20px; background: rgba(12, 19, 39, 0.96); border: 1px solid rgba(255,255,255,0.08); padding: 20px; }
+    .status-card small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
+    .status-card strong { display: block; color: #f7fbff; font-size: 2rem; font-family: 'Courier New', Courier, monospace; line-height: 1.05; }
+    .status-card .label { margin-top: 10px; color: #9db8d7; }
+
+    .lock-panel { gap: 20px; }
+    .lock-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .lock-header h2 { margin: 0; font-size: 1.65rem; color: #eef8ff; }
+    .lock-header p { margin: 0; color: #b7d2ec; line-height: 1.6; max-width: 54ch; }
+    .lock-badge { display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 999px; background: linear-gradient(180deg, rgba(255, 97, 127, 0.18), rgba(25, 7, 22, 0.9)); border: 1px solid rgba(255, 97, 127, 0.2); color: #ff9cb3; font-weight: 700; }
+
+    .lock-status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .metric-card { padding: 20px; border-radius: 20px; background: rgba(5, 10, 22, 0.95); border: 1px solid rgba(255,255,255,0.08); }
+    .metric-card small { color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .metric-card strong { display: block; font-size: 2.2rem; margin-top: 10px; color: #f6fbff; font-family: 'Courier New', Courier, monospace; }
+    .metric-card .meta { margin-top: 8px; color: #8fb9d8; }
+
+    .unlock-card { display: grid; gap: 18px; }
+    .unlock-card h2 { margin: 0; font-size: 1.35rem; color: #eef8ff; }
+    .unlock-card form { display: grid; gap: 14px; }
+    .unlock-card label { color: #c8d8f0; font-size: 0.95rem; }
+    .unlock-card input { width: 100%; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); background: rgba(5, 10, 20, 0.94); color: var(--text); padding: 16px 18px; font-size: 1rem; outline: none; }
+    .unlock-card input:focus { border-color: rgba(87, 209, 255, 0.55); box-shadow: 0 0 0 5px rgba(87, 209, 255, 0.12); }
+    .unlock-card button { height: 56px; border: none; border-radius: 16px; background: linear-gradient(135deg, rgba(71, 234, 255, 0.95), rgba(87, 209, 255, 0.96)); color: #040611; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .unlock-card button:hover { transform: translateY(-1px); box-shadow: 0 18px 30px rgba(71, 234, 255, 0.2); }
+
+    .service-panel, .rules-panel { display: grid; gap: 18px; }
+    .service-panel h3, .rules-panel h3 { margin: 0; font-size: 1.35rem; color: #eef8ff; }
+    .feature-card, .rule-card { padding: 18px; border-radius: 20px; background: rgba(5, 9, 21, 0.96); border: 1px solid rgba(255,255,255,0.08); display: grid; gap: 10px; }
+    .feature-card strong, .rule-card strong { color: #f5fbff; font-size: 1.02rem; }
+    .feature-card span, .rule-card span { color: #adbedb; font-size: 0.95rem; line-height: 1.6; }
+    .badge { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; font-size: 0.86rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.08); }
+
+    .ticker { padding: 18px 24px; border-radius: 20px; background: rgba(7, 13, 27, 0.96); border: 1px solid rgba(255,255,255,0.08); color: #a9c6dd; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .ticker::before { content: '•'; color: #57d1ff; }
+
+    @media (max-width: 1280px) { .grid { grid-template-columns: 1fr; padding: 20px; } .header { flex-direction: column; align-items: stretch; } .header-meta { justify-content: space-between; flex-wrap: wrap; } .lock-status-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) { .panel { padding: 22px; } .hero-title { font-size: 2.2rem; } .header-meta { gap: 14px; } }
+    @media (max-width: 680px) { .grid { padding: 14px; } .header { padding: 16px; } .ticker { font-size: 0.88rem; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="backdrop"></div>
+    <div class="glow-blob one"></div>
+    <div class="glow-blob two"></div>
+
+    <div class="grid">
+      <header class="header">
+        <div class="brand">
+          <div class="brand-mark"><span>FP</span></div>
+          <div class="brand-text">
+            <div class="name">FP Gaming Cyber Cafe</div>
+            <div class="sub">Premium Station Lock</div>
+          </div>
+        </div>
+        <div class="header-meta">
+          <div><small>Current time</small><strong id="clock">00:00:00</strong></div>
+          <div><small>Session date</small><strong id="date">Loading...</strong></div>
+          <div><small>Connection</small><strong>Online</strong></div>
+          <div><small>Computer</small><strong>#07</strong></div>
+        </div>
+        <div class="header-status">
+          <span class="status-chip"><span class="status-dot"></span>Locked</span>
+        </div>
+      </header>
+
+      <section class="panel hero">
+        <p class="eyebrow">Station lock</p>
+        <h1 class="hero-title">Futuristic client monitor locked in premium lounge mode.</h1>
+        <p class="hero-copy">This screen is built for a single monitor with no scrolling. Present your token or visit the counter for access, payment, and support.</p>
+
+        <div class="status-grid">
+          <div class="status-card"><small>Power</small><strong>Stable</strong><div class="label">Ready</div></div>
+          <div class="status-card"><small>Network</small><strong>Connected</strong><div class="label">Online</div></div>
+          <div class="status-card"><small>Session</small><strong>Locked</strong><div class="label">Awaiting token</div></div>
+        </div>
+
+        <div class="lock-panel">
+          <div class="lock-header">
+            <div>
+              <h2>Client PC secured</h2>
+              <p>Unlock the station to resume your session. Your workstation remains protected until authentication is complete.</p>
+            </div>
+            <span class="lock-badge">Locked</span>
+          </div>
+
+          <div class="lock-status-grid">
+            <div class="metric-card"><small>PC Number</small><strong>#07</strong><div class="meta">Assigned workstation</div></div>
+            <div class="metric-card"><small>Time remaining</small><strong id="countdown">02:45:12</strong><div class="meta">Session countdown</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel unlock-card">
+        <h2>Unlock access</h2>
+        <form>
+          <label for="unlockCode">Enter access token</label>
+          <input id="unlockCode" type="text" placeholder="Enter PIN or QR code" autocomplete="off">
+          <button type="button">Unlock station</button>
+        </form>
+      </section>
+
+      <section class="panel service-panel">
+        <h3>Services available</h3>
+        <div class="feature-card"><strong>Printing & scanning</strong><span>Fast color prints, duplex scanning, and instant receipts.</span><span class="badge" style="background:rgba(79, 216, 255, 0.14);color:#7ce0ff;border-color:rgba(79, 216, 255, 0.25);">Ready</span></div>
+        <div class="feature-card"><strong>GCash terminal</strong><span>Secure cash-in/cash-out with printed confirmation.</span><span class="badge" style="background:rgba(255, 126, 190, 0.14);color:#ff9bc6;border-color:rgba(255, 126, 190, 0.24);">Node</span></div>
+        <div class="feature-card"><strong>PC maintenance</strong><span>Formatting and OS install support available by appointment.</span><span class="badge" style="background:rgba(112, 248, 255, 0.15);color:#b9f2ff;border-color:rgba(112, 248, 255, 0.28);">Schedule</span></div>
+      </section>
+
+      <section class="panel rules-panel">
+        <h3>Rules & regulations</h3>
+        <div class="rule-card"><strong>Porn browsing</strong><span>Access to adult content is strictly prohibited.</span><span class="badge" style="background:rgba(255, 94, 141, 0.15);color:#ff9bb7;border-color:rgba(255, 94, 141, 0.26);">Ban</span></div>
+        <div class="rule-card"><strong>Sharp objects</strong><span>Knives and other sharp items are not allowed on premises.</span><span class="badge" style="background:rgba(255, 94, 141, 0.15);color:#ff9bb7;border-color:rgba(255, 94, 141, 0.26);">Ban</span></div>
+        <div class="rule-card"><strong>No smoking</strong><span>Smoking is forbidden within the facility.</span><span class="badge" style="background:rgba(172, 255, 125, 0.15);color:#d4ff7d;border-color:rgba(172, 255, 125, 0.24);">Must</span></div>
+      </section>
+
+      <footer class="ticker">Printing ₱5 B/W · Color ₱15 · GCash Cash-In Available · Promo: 3hrs for ₱40 · Ask counter for bundle deals · PC formatting by appointment</footer>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var clock = document.getElementById('clock');
+      var date = document.getElementById('date');
+      var countdown = document.getElementById('countdown');
+      var remaining = 2 * 3600 + 45 * 60 + 12;
+      function pad(value) { return value < 10 ? '0' + value : value; }
+      function updateTime() {
+        var now = new Date();
+        date.textContent = now.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+        clock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+      function updateCountdown() {
+        if (remaining < 0) return;
+        var hours = Math.floor(remaining / 3600);
+        var minutes = Math.floor((remaining % 3600) / 60);
+        var seconds = remaining % 60;
+        countdown.textContent = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+        remaining -= 1;
+      }
+      updateTime();
+      updateCountdown();
+      setInterval(updateTime, 1000);
+      setInterval(updateCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>

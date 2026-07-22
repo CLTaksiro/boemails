@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FP Gaming Cyber Cafe — Station Lock</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg1: #04050f;
+  --bg2: #07101e;
+  --surface: rgba(11, 17, 36, 0.82);
+  --surface-strong: rgba(6, 12, 29, 0.94);
+  --border: rgba(99, 199, 255, 0.2);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --text: #eaf6ff;
+  --muted: #8fadc9;
+  --accent: #57d1ff;
+  --accent-strong: #8a74ff;
+  --glow: #4fd8ff;
+  --success: #72e0ff;
+  --warning: #ff7edb;
+  --danger: #ff5f7b;
+  --radius: 18px;
+  --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: Inter, 'Segoe UI', system-ui, sans-serif; background: radial-gradient(circle at 20% 10%, rgba(81, 220, 255, 0.14), transparent 16%), radial-gradient(circle at 90% 10%, rgba(139, 79, 255, 0.12), transparent 18%), #04050f; color: var(--text); }
+body { display: flex; align-items: center; justify-content: center; }
+.page-frame { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.backdrop { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 16, 34, 0.82) 0%, rgba(4, 6, 14, 0.96) 100%); pointer-events: none; }
+.glow-ring { position: absolute; top: 5%; left: 8%; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(83, 209, 255, 0.28), transparent 58%); filter: blur(22px); pointer-events: none; }
+.glow-ring2 { position: absolute; bottom: 8%; right: 10%; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(152, 93, 255, 0.2), transparent 58%); filter: blur(32px); pointer-events: none; }
+.dashboard { position: relative; display: grid; grid-template-columns: 1fr 420px; gap: 26px; height: 100%; padding: 28px 32px; }
+.header-panel { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 24px; border-radius: 20px; background: rgba(10, 18, 36, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(18px); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42); }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo { width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, rgba(84, 217, 255, 0.95), rgba(109, 80, 255, 0.85)); display: grid; place-items: center; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.brand-logo span { font-size: 1.1rem; font-weight: 800; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.15); }
+.brand-copy { display: grid; gap: 2px; }
+.brand-copy .name { font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #e7f7ff; }
+.brand-copy .sub { font-size: .84rem; color: var(--muted); }
+.header-meta { display: flex; align-items: center; justify-content: center; gap: 24px; flex: 1; font-size: .95rem; color: var(--muted); }
+.header-meta div { display: grid; gap: 6px; text-align: center; }
+.header-meta div strong { font-size: 1.1rem; color: #f5fbff; }
+.status-pill { padding: 10px 16px; border-radius: 999px; font-weight: 700; letter-spacing: 0.02em; font-size: .90rem; background: rgba(87, 209, 255, 0.12); border: 1px solid rgba(87, 209, 255, 0.2); color: var(--accent); }
+.top-right { display: flex; align-items: center; gap: 12px; }
+.chip { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: #57d1ff; box-shadow: 0 0 12px rgba(87, 209, 255, 0.45); }
+.main-card { display: grid; grid-template-rows: 1fr auto; gap: 22px; padding: 28px; border-radius: 24px; background: rgba(9, 15, 32, 0.86); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--shadow); backdrop-filter: blur(20px); overflow: hidden; }
+.main-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(63, 216, 255, 0.08), transparent 25%, rgba(139, 79, 255, 0.06)); pointer-events: none; }
+.main-top { display: grid; grid-template-columns: 1fr 320px; gap: 24px; position: relative; z-index: 1; }
+.main-status { display: grid; gap: 18px; }
+.main-status h1 { margin: 0; font-size: 3.1rem; line-height: 1.02; color: #f8fdff; letter-spacing: -0.03em; }
+.main-status p { margin: 0; max-width: 62ch; font-size: 1rem; color: #b8d8ee; line-height: 1.75; }
+.status-panel { padding: 22px; border-radius: 24px; background: rgba(2, 8, 22, 0.82); border: 1px solid rgba(87, 209, 255, 0.16); display: grid; gap: 18px; position: relative; z-index: 1; }
+.status-panel h2 { margin: 0; font-size: 1.25rem; color: #eaf8ff; }
+.status-chip { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-radius: 18px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); }
+.status-chip strong { font-size: 1rem; color: #f5fbff; }
+.status-chip span { font-size: .92rem; color: var(--muted); }
+.locked-badge { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; background: linear-gradient(180deg, rgba(255, 97, 127, 0.16), rgba(28, 8, 20, 0.8)); color: #ff9cb3; border: 1px solid rgba(255, 97, 127, 0.18); font-weight: 700; }
+.lock-card { padding: 24px; border-radius: 24px; background: rgba(3, 10, 22, 0.90); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04); position: relative; overflow: hidden; }
+.lock-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(79, 216, 255, 0.16), transparent 18%); pointer-events: none; }
+.lock-card h3 { margin: 0; font-size: 1.45rem; color: #e6f7ff; }
+.lock-card p { margin: 10px 0 0; color: #adc9e9; line-height: 1.75; }
+.lock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 28px; }
+.stat-box { padding: 22px; border-radius: 20px; background: rgba(6, 12, 26, 0.9); border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02); }
+.stat-box small { display: block; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; font-size: .78rem; margin-bottom: 10px; }
+.stat-box strong { display: block; font-size: 2.2rem; color: #f5fbff; font-family: 'Courier New', Courier, monospace; }
+.stat-box .label { margin-top: 8px; color: #8fb9d8; font-size: .95rem; }
+.unlock-panel { display: grid; gap: 16px; padding: 24px; border-radius: 24px; background: rgba(10, 18, 36, 0.90); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04); }
+.unlock-panel h2 { margin: 0; font-size: 1.25rem; color: #eaf8ff; }
+.unlock-panel form { display: grid; gap: 16px; }
+.unlock-panel label { font-size: .95rem; color: #c8dcf2; }
+.unlock-panel input { width: 100%; border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(5, 10, 20, 0.95); color: var(--text); font-size: 1rem; outline: none; }
+.unlock-panel input:focus { border-color: rgba(83, 209, 255, 0.55); box-shadow: 0 0 0 5px rgba(83, 209, 255, 0.12); }
+.unlock-panel button { height: 56px; border: none; border-radius: 16px; background: linear-gradient(135deg, rgba(71, 234, 255, 0.95), rgba(87, 209, 255, 0.95)); color: #040611; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.unlock-panel button:hover { transform: translateY(-1px); box-shadow: 0 18px 30px rgba(71, 234, 255, 0.2); }
+.side-panel { display: grid; gap: 22px; height: 100%; }
+.stats-panel, .rules-panel { padding: 24px; border-radius: 24px; background: rgba(9, 15, 32, 0.88); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(18px); box-shadow: var(--shadow); overflow: hidden; position: relative; }
+.stats-panel::before, .rules-panel::before { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(87, 209, 255, 0.05), transparent 30%); pointer-events: none; }
+.stats-panel h2, .rules-panel h2 { margin: 0; color: #eaf8ff; font-size: 1.35rem; }
+.stats-grid { display: grid; gap: 16px; margin-top: 20px; }
+.feature-card, .rule-card { display: grid; gap: 10px; padding: 18px; border-radius: 18px; background: rgba(5, 10, 20, 0.95); border: 1px solid rgba(255, 255, 255, 0.06); }
+.feature-card strong, .rule-card strong { color: #f5fbff; font-size: 1.02rem; }
+.feature-card span, .rule-card span { color: #adbedb; font-size: .95rem; line-height: 1.6; }
+.badge { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; font-size: .86rem; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.08); }
+.footer-banner { padding: 18px 24px; border-radius: 20px; background: rgba(7, 13, 27, 0.96); border: 1px solid rgba(255, 255, 255, 0.08); color: #a9c6dd; font-size: .95rem; display: flex; align-items: center; gap: 10px; overflow: hidden; }
+.footer-banner span { display: inline-flex; align-items: center; justify-content: center; width: 10px; height: 10px; border-radius: 50%; background: rgba(79, 216, 255, 0.9); }
+@media (max-width: 1400px) { .dashboard { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .main-top { grid-template-columns: 1fr; } .header-meta { flex-wrap: wrap; justify-content: center; } .top-right { justify-content: center; } .side-panel { grid-template-columns: 1fr; } }
+@media (max-width: 980px) { .dashboard { padding: 18px; gap: 18px; } .main-card { padding: 22px; } .stats-panel, .rules-panel { padding: 20px; } .lock-grid { grid-template-columns: 1fr; } .status-chip { flex-direction: column; align-items: flex-start; } }
+@media (max-width: 720px) { body { padding: 12px; } .dashboard { gap: 14px; } .header-panel { flex-direction: column; align-items: flex-start; } .main-card { padding: 20px; } .header-meta { gap: 14px; font-size: .9rem; } .brand-logo { width: 48px; height: 48px; } .main-status h1 { font-size: 2.2rem; } .unlock-panel { padding: 20px; } .footer-banner { font-size: .88rem; } }
+</style>
+</head>
+<body>
+<div class="page-frame">
+  <div class="backdrop"></div>
+  <div class="glow-ring"></div>
+  <div class="glow-ring2"></div>
+  <div class="dashboard">
+    <header class="header-panel">
+      <div class="brand">
+        <div class="brand-logo"><span>FP</span></div>
+        <div class="brand-copy">
+          <div class="name">FP Gaming Cyber Cafe</div>
+          <div class="sub">Premium PC Station Lock</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div><small>Current time</small><strong id="clock">00:00:00</strong></div>
+        <div><small>Session date</small><strong id="date">Loading...</strong></div>
+        <div><small>Connection</small><strong>Online</strong></div>
+        <div><small>Computer</small><strong>#07</strong></div>
+      </div>
+      <div class="top-right">
+        <div class="chip"><span class="dot"></span>Locked</div>
+      </div>
+    </header>
+    <main class="main-card">
+      <div class="main-top">
+        <div class="main-status">
+          <p class="eyebrow" style="margin:0;font-size:.9rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);">Station lock</p>
+          <h1>Futuristic client monitor locked in premium lounge mode.</h1>
+          <p>Unlock with your session key or visit the counter for payment and support. This screen is optimized for a single 1920×1080 monitor with zero scroll.</p>
+        </div>
+        <div class="status-panel">
+          <h2>System readiness</h2>
+          <div class="status-chip"><strong>Power</strong><span>Stable</span></div>
+          <div class="status-chip"><strong>Network</strong><span>Connected</span></div>
+          <div class="status-chip"><strong>Peripheral</strong><span>Ready</span></div>
+          <div class="status-chip"><strong>Session</strong><span>Awaiting token</span></div>
+        </div>
+      </div>
+      <section class="lock-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
+          <div>
+            <h3>Client PC locked</h3>
+            <p>The station is secured for your current session. Present your token to unlock and resume the premium gaming lounge experience.</p>
+          </div>
+          <span class="locked-badge">Locked</span>
+        </div>
+        <div class="lock-grid">
+          <div class="stat-box">
+            <small>PC Number</small>
+            <strong>#07</strong>
+            <div class="label">Assigned workstation</div>
+          </div>
+          <div class="stat-box">
+            <small>Time remaining</small>
+            <strong id="countdown">02:45:12</strong>
+            <div class="label">Session countdown</div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <aside class="side-panel">
+      <section class="unlock-panel">
+        <h2>Unlock access</h2>
+        <form>
+          <label for="unlockCode">Enter access token</label>
+          <input id="unlockCode" type="text" placeholder="Enter PIN or QR code" autocomplete="off">
+          <button type="button">Unlock station</button>
+        </form>
+      </section>
+      <section class="stats-panel">
+        <h2>Services available</h2>
+        <div class="stats-grid">
+          <div class="feature-card">
+            <strong>Printing & scanning</strong>
+            <span>Fast color prints, scans, and instant receipts.</span>
+            <span class="badge" style="background:rgba(52, 168, 255, 0.16);color:#78dfff;border-color:rgba(52, 168, 255, 0.25);">Ready</span>
+          </div>
+          <div class="feature-card">
+            <strong>GCash cash-in/out</strong>
+            <span>Secure transactions with printed confirmation.</span>
+            <span class="badge" style="background:rgba(255, 125, 189, 0.16);color:#ff9bc9;border-color:rgba(255, 125, 189, 0.25);">Node</span>
+          </div>
+          <div class="feature-card">
+            <strong>PC maintenance</strong>
+            <span>Formatting and OS restore available by appointment.</span>
+            <span class="badge" style="background:rgba(112, 248, 255, 0.15);color:#b9f2ff;border-color:rgba(112, 248, 255, 0.28);">Schedule</span>
+          </div>
+        </div>
+      </section>
+      <section class="rules-panel">
+        <h2>Rules & regulations</h2>
+        <div class="stats-grid">
+          <div class="rule-card">
+            <strong>Porn browsing</strong>
+            <span>Strictly prohibited on all stations.</span>
+            <span class="badge" style="background:rgba(255, 94, 141, 0.16);color:#ff9bb8;border-color:rgba(255, 94, 141, 0.26);">Ban</span>
+          </div>
+          <div class="rule-card">
+            <strong>Sharp objects</strong>
+            <span>Knives and similar items are not allowed.</span>
+            <span class="badge" style="background:rgba(255, 94, 141, 0.16);color:#ff9bb8;border-color:rgba(255, 94, 141, 0.26);">Ban</span>
+          </div>
+          <div class="rule-card">
+            <strong>No smoking</strong>
+            <span>Smoking is prohibited in the lounge.</span>
+            <span class="badge" style="background:rgba(173, 255, 123, 0.16);color:#d4ff7d;border-color:rgba(173, 255, 123, 0.25);">Must</span>
+          </div>
+        </div>
+      </section>
+    </aside>
+    <footer class="footer-banner">
+      <span></span>Printing ₱5 B/W · Color ₱15 · GCash Cash-In Available · Promo: 3hrs for ₱40 · Ask counter for bundle deals · PC formatting by appointment
+    </footer>
+  </div>
+</div>
+<script>
+(function() {
+  var clock = document.getElementById('clock');
+  var date = document.getElementById('date');
+  var countdown = document.getElementById('countdown');
+  var remaining = 2 * 3600 + 45 * 60 + 12;
+  function pad(value) { return value < 10 ? '0' + value : value; }
+  function updateTime() {
+    var now = new Date();
+    date.textContent = now.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+    clock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  function updateCountdown() {
+    if (remaining < 0) { return; }
+    var hours = Math.floor(remaining / 3600);
+    var minutes = Math.floor((remaining % 3600) / 60);
+    var seconds = remaining % 60;
+    countdown.textContent = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+    remaining -= 1;
+  }
+  updateTime();
+  updateCountdown();
+  setInterval(updateTime, 1000);
+  setInterval(updateCountdown, 1000);
+})();
+</script>
+</body>
+</html>

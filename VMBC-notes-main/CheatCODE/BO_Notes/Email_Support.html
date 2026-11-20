@@ -205,6 +205,18 @@
       <div>Technical Support: <span>Dev. Frank</span></div>
     </div>
   </div>
+ <script>
+    let seconds = 30;
+    const countdownEl = document.getElementById('countdown');
 
+    setInterval(() => {
+      seconds--;
+      if (seconds <= 0) {
+        location.reload();
+      } else {
+        countdownEl.textContent = seconds;
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
